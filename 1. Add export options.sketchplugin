@@ -1,0 +1,55 @@
+// (shift cmd a)
+
+#import 'ExportablerConfig.js'
+
+if (selection.length() > 0){
+	
+	for (var i=0; i < selection.length(); i++){ 
+		addExportSizes(selection[i]) 	
+	}
+	[doc showMessage:"Export Options Added"]
+
+}else{ 
+
+ 	var app = [NSApplication sharedApplication];
+    [app displayDialog:"Anything selected :(" withTitle:"Exportabler"];
+}
+
+function addExportSizes(layer){ 
+
+		var iOSExportData = [
+		  {
+		    "format": "png",
+		    "scale": 1/Config.scale,
+		    "suffix": ""
+		  },
+		  {
+		    "format": "png",
+		    "scale": 2/Config.scale,
+		    "suffix": "@2x"
+		  },
+		  { 			
+		    "format": "png",
+		    "scale": 3/Config.scale,
+		    "suffix": "@3x"
+		  }
+		]
+
+		var export_options = [layer exportOptions]
+		var export_sizes = [export_options sizes]
+
+		while([export_sizes count] > 0) {
+		  [[export_sizes firstObject] remove]
+		}
+
+		for (var i = 0; i < iOSExportData.length; i++) {
+		  var size_data = iOSExportData[i]
+		  var size = [[layer exportOptions] addExportSize]
+		  [size setFormat:size_data.format]
+		  [size setScale:size_data.scale]
+		  [size setName:size_data.suffix]
+		}
+
+		[[doc currentPage] deselectAllLayers]
+		[layer select:true byExpandingSelection:true]
+} 

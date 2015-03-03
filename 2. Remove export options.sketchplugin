@@ -1,0 +1,29 @@
+// Remove Export Options (shift cmd x)
+
+#import 'ExportablerConfig.js'
+
+if (selection.length() > 0){
+
+	for (var i=0; i < selection.length(); i++){ 
+		removeExportOptions(selection[i]) 	
+	}
+	
+	[doc showMessage:"Export Options Removed"]
+}else{ 
+ 	var app = [NSApplication sharedApplication];
+    [app displayDialog:"Anything selected :(" withTitle:"Exportabler"];
+}
+
+function removeExportOptions(layer){ 
+
+	var export_options = [layer exportOptions]
+	var export_sizes = [export_options sizes]
+
+	while([export_sizes count] > 0) {
+	  [[export_sizes firstObject] remove]
+	}
+	// This is just a hack to force the updating of the UI to see the new sizes in the inspector
+	[[doc currentPage] deselectAllLayers]
+	[layer select:true byExpandingSelection:true]
+
+} 
